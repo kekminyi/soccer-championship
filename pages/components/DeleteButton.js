@@ -39,7 +39,7 @@ export default function DeleteButton() {
   return (
     <>
       <Center mt={"3%"}>
-        <Button w="50%" colorScheme="red" onClick={onOpen} mb={"3%"}>
+        <Button w="50%" colorScheme="red" onClick={onOpen}>
           Delete all records
         </Button>
       </Center>

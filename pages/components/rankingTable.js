@@ -38,7 +38,7 @@ export default function RankingTable() {
   }, [fetchData]);
 
   return (
-    <Box bg="white" borderWidth="1px" borderRadius="lg" m="5%">
+    <Box bg="white" borderWidth="1px" borderRadius="lg" m="5%" pb={"5%"}>
       <Center>
         <Heading p="2%">Soccer Championship Scoreboard 2022</Heading>
       </Center>
