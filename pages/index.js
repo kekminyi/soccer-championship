@@ -4,7 +4,7 @@ import Head from "next/head";
 import React, { useEffect, useState, useCallback } from "react";
 import RankingTable from "./components/RankingTable";
 import TeamInfoSubmission from "./components/TeamInfoSubmission";
-import SubmitMatchResults from "./components/SubmitMatchResults";
+import MatchResultsSubmission from "./components/MatchResultsSubmission";
 import DeleteButton from "./components/DeleteButton";
 import axios from "axios";
 
@@ -39,9 +39,9 @@ export default function Home() {
             setTeamInfoSubmitSuccess={setTeamInfoSubmitSuccess}
           ></TeamInfoSubmission>
           {teamInfoSubmitSuccess && (
-            <SubmitMatchResults
+            <MatchResultsSubmission
               setMatchResultsSubmitSuccess={setMatchResultsSubmitSuccess}
-            ></SubmitMatchResults>
+            ></MatchResultsSubmission>
           )}
         </>
       )}

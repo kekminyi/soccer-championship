@@ -12,14 +12,16 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function SubmitMatchResults({ setMatchResultsSubmitSuccess }) {
+export default function MatchResultsSubmission({
+  setMatchResultsSubmitSuccess,
+}) {
   const [matchResults, setMatchResults] = useState("");
 
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
-      await axios.post("/api/submitResults", { matchResults }).then(() => {
+      await axios.post("/api/submitMatchResults", { matchResults }).then(() => {
         toast({
           title: "Success!",
           description: "Match results submitted!",
