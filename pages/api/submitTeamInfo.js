@@ -6,9 +6,14 @@ export default async function handler(req, res) {
       let text = req.body.teamInfo;
       text = text.trim().split("\n");
       const headers = ["teamName", "registrationDate", "groupNumber"];
-      // TODO: google how to convert string to object in a easier to understand way
       const parsedTeamInfo = text.map((i) => {
         const values = i.split(" ");
+        if (values.length != 4) {
+          return res.status(400).json({
+            message:
+              "There is an error with the team information. Please check and try again.",
+          });
+        }
         const obj = headers.reduce((object, header, index) => {
           if (header === "registrationDate") {
             let date = values[index].split("/");
@@ -33,15 +38,17 @@ export default async function handler(req, res) {
         });
       } catch (e) {
         console.error(e);
-        return res
-          .status(500)
-          .json({ message: "Something went wrong. Please try again." });
+        return res.status(400).json({
+          message:
+            "There is an error with the team information. Please check and try again.",
+        });
       }
     } catch (e) {
       console.error(e);
-      return res
-        .status(500)
-        .json({ message: "Something went wrong. Please try again." });
+      return res.status(400).json({
+        message:
+          "There is an error with the team information. Please check and try again.",
+      });
     }
   }
 }
