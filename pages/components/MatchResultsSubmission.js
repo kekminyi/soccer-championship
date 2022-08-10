@@ -1,21 +1,25 @@
 import {
-  Heading,
   Button,
-  Center,
   InputGroup,
   FormControl,
-  Box,
   Textarea,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  useDisclosure,
 } from "@chakra-ui/react";
-
+import SidebarIcon from "./SideBarIcon";
 import React, { useState } from "react";
+import { FiUpload } from "react-icons/fi";
 import axios from "axios";
 
-export default function MatchResultsSubmission({
-  setMatchResultsSubmitSuccess,
-}) {
+export default function MatchResultsSubmission() {
   const [matchResults, setMatchResults] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
@@ -30,7 +34,6 @@ export default function MatchResultsSubmission({
           isClosable: true,
         });
       });
-      setMatchResultsSubmitSuccess(true);
     } catch (error) {
       console.error(error);
       toast({
@@ -42,45 +45,55 @@ export default function MatchResultsSubmission({
         isClosable: true,
       });
     }
+    onClose();
+    location.reload();
   };
 
   const handleChange = (event) => {
     setMatchResults(event.target.value);
   };
   return (
-    <Box
-      bg="white"
-      borderWidth="1px"
-      borderRadius="lg"
-      mx="15%"
-      my="1%"
-      py="10"
-    >
-      <Center>
-        <Heading p="2%">Submit Match Results</Heading>
-      </Center>
-      <Center>
-        <FormControl isRequired w={"70%"}>
-          <InputGroup>
-            <Textarea
-              size="lg"
-              fontSize="l"
-              placeholder="Submit match results here!"
-              value={matchResults}
-              onChange={handleChange}
-            ></Textarea>
-          </InputGroup>
-          <Button
-            size="md"
-            w="100%"
-            colorScheme="whatsapp"
-            mt="1em"
-            onClick={handleSubmit}
-          >
-            Submit!
-          </Button>
-        </FormControl>
-      </Center>
-    </Box>
+    <>
+      <SidebarIcon
+        mt={10}
+        onClick={onOpen}
+        iconName={FiUpload}
+        text="Upload Match Results"
+      ></SidebarIcon>
+
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upload Match Results</ModalHeader>
+          <ModalBody>
+            <FormControl isRequired w={"100%"}>
+              <InputGroup>
+                <Textarea
+                  size="lg"
+                  fontSize="l"
+                  placeholder="Submit match results here!"
+                  value={matchResults}
+                  onChange={handleChange}
+                ></Textarea>
+              </InputGroup>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              size="md"
+              w="100%"
+              colorScheme="whatsapp"
+              m="1%"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+            <Button onClick={onClose} m="1%">
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

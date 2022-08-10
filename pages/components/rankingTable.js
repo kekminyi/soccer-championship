@@ -15,10 +15,7 @@ import {
 import axios from "axios";
 import DeleteButton from "./DeleteButton";
 
-export default function RankingTable({
-  setTeamInfoSubmitSuccess,
-  setMatchResultsSubmitSuccess,
-}) {
+export default function RankingTable() {
   const toast = useToast();
   const [teamInfoArr, setTeamInfoArr] = useState([]);
 
@@ -36,41 +33,39 @@ export default function RankingTable({
   }, [fetchData]);
 
   return (
-    <Box
-      bg="white"
-      borderWidth="1px"
-      borderRadius="lg"
-      mx="15%"
-      my="5%"
-      py="10"
-    >
+    <Box bg="white" borderWidth="1px" borderRadius="lg" m="5%" py="10">
       <Center>
         <Heading p="2%">Soccer Championship Scoreboard 2022</Heading>
       </Center>
-      <TableContainer>
-        <Table colorScheme="teal" size="sm" maxWidth="60%" mx="auto">
+      <TableContainer mt={"5%"}>
+        <Table colorScheme="teal" size="md" maxWidth="90%" mx="auto">
           <Thead>
             <Tr>
-              <Th>ID</Th>
-              <Th>teamName</Th>
-              <Th>Current Rankings</Th>
+              <Th>Ranking</Th>
+              <Th>Team Name</Th>
+              <Th>Reg. Date (MM/dd)</Th>
+              <Th>Goals Scored</Th>
+              <Th>Matches Won</Th>
+              <Th>Matches Drawn</Th>
+              <Th>Matches Lost</Th>
             </Tr>
           </Thead>
           <Tbody>
             {teamInfoArr.map((teamInfo) => (
               <Tr key={teamInfo.id}>
-                <Td>{teamInfo.id}</Td>
-                <Td>{teamInfo.teamName}</Td>
                 <Td>{teamInfo.currentRanking}</Td>
+                <Td>{teamInfo.teamName}</Td>
+                <Td>{teamInfo.registrationDate.substring(5, 10)}</Td>
+                <Td>{teamInfo.goalsScored}</Td>
+                <Td>{teamInfo.matchesWon}</Td>
+                <Td>{teamInfo.matchesDrawn}</Td>
+                <Td>{teamInfo.matchesLost}</Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
       </TableContainer>
-      <DeleteButton
-        setTeamInfoSubmitSuccess={setTeamInfoSubmitSuccess}
-        setMatchResultsSubmitSuccess={setMatchResultsSubmitSuccess}
-      ></DeleteButton>
+      <DeleteButton></DeleteButton>
     </Box>
   );
 }

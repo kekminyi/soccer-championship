@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const headers = ["teamName", "registrationDate", "groupNumber"];
       const parsedTeamInfo = text.map((i) => {
         const values = i.split(" ");
-        if (values.length != 4) {
+        if (values.length != 3) {
           return res.status(400).json({
             message:
               "There is an error with the team information. Please check and try again.",

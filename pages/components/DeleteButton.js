@@ -1,12 +1,24 @@
-import { Center, Button, useToast } from "@chakra-ui/react";
+import {
+  Center,
+  Button,
+  useToast,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogCloseButton,
+  AlertDialogOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import axios from "axios";
+import React from "react";
 
-export default function DeleteButton({
-  my,
-  setTeamInfoSubmitSuccess,
-  setMatchResultsSubmitSuccess,
-}) {
+export default function DeleteButton() {
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
+
   const handleDelete = async () => {
     try {
       await axios.post("/api/deleteAll").then(() => {
@@ -17,8 +29,7 @@ export default function DeleteButton({
           duration: 6000,
           isClosable: true,
         });
-        setTeamInfoSubmitSuccess(false);
-        setMatchResultsSubmitSuccess(false);
+
         location.reload();
       });
     } catch (error) {
@@ -26,10 +37,37 @@ export default function DeleteButton({
     }
   };
   return (
-    <Center mt={5} my={my}>
-      <Button w="70%" colorScheme="red" onClick={handleDelete}>
-        Delete all records
-      </Button>
-    </Center>
+    <>
+      <Center mt={"5%"}>
+        <Button w="50%" colorScheme="red" onClick={onOpen}>
+          Delete all records
+        </Button>
+      </Center>
+      <AlertDialog
+        motionPreset="slideInBottom"
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+      >
+        <AlertDialogOverlay />
+
+        <AlertDialogContent>
+          <AlertDialogHeader>Discard Changes?</AlertDialogHeader>
+          <AlertDialogCloseButton />
+          <AlertDialogBody>
+            Are you sure you want to delete all of the data?
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose}>
+              No
+            </Button>
+            <Button colorScheme="red" ml={3} onClick={handleDelete}>
+              Yes
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
