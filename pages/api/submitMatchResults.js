@@ -15,6 +15,35 @@ const recalculateAltPoints = (teamResults) => {
   return points;
 };
 
+const calculateRanking = (teamInfoMap) => {
+  var finalArr = [];
+  teamInfoMap.forEach((object) => {
+    finalArr.push(object);
+  });
+
+  var group1 = finalArr.filter(function (object) {
+    return object.groupNumber === "1";
+  });
+
+  var group2 = finalArr.filter(function (object) {
+    return object.groupNumber === "2";
+  });
+
+  group1 = sortGroup(group1);
+  group2 = sortGroup(group2);
+
+  group1.map((object) => {
+    object.currentRanking = group1.indexOf(object) + 1;
+  });
+
+  group2.map((object) => {
+    object.currentRanking = group2.indexOf(object) + 1;
+  });
+
+  finalArr = group1.concat(group2);
+  return finalArr;
+};
+
 const sortGroup = (arr) => {
   arr.sort(function (a, b) {
     // sort by points
@@ -45,64 +74,49 @@ export default async function handler(req, res) {
     try {
       let matchResults = req.body.matchResults;
       matchResults = matchResults.trim().split("\n");
+
+      // validate match results
+      var validatedMatchResults = [];
+      matchResults.forEach((rowValue) => {
+        var rowValues = rowValue.split(" ");
+        if (rowValues.length != 4) {
+          return res.status(400).json({
+            message:
+              "There is an error with the match results. Please check and try again.",
+          });
+        }
+        rowValues[2] = parseInt(rowValues[2]);
+        rowValues[3] = parseInt(rowValues[3]);
+        validatedMatchResults.push(rowValues);
+      });
+
+      // convert to map object for easier manipulation
       const teamInfo = await prisma.soccerDB.findMany({});
       const teamInfoMap = new Map();
-
       teamInfo.forEach((object) => {
         teamInfoMap.set(object.teamName, object);
       });
-      const updatedTeamInfo = matchResults.map((i) => {
-        const values = i.split(" ");
-        values[2] = parseInt(values[2]);
-        values[3] = parseInt(values[3]);
-        if (values[2] > values[3]) {
-          var winnerTeam = teamInfoMap.get(values[0]);
-          winnerTeam.matchesWon += 1;
-          winnerTeam.goalsScored += values[2];
-          var loserTeam = teamInfoMap.get(values[1]);
-          loserTeam.matchesLost += 1;
-          loserTeam.goalsScored += values[3];
-        } else if (values[2] < values[3]) {
-          var loserTeam = teamInfoMap.get(values[0]);
-          loserTeam.matchesLost += 1;
-          loserTeam.goalsScored += values[2];
-          var winnerTeam = teamInfoMap.get(values[1]);
-          winnerTeam.matchesWon += 1;
-          winnerTeam.goalsScored += values[3];
-        } else if (values[2] == values[3]) {
-          var team1 = teamInfoMap.get(values[0]);
-          var team2 = teamInfoMap.get(values[1]);
-          team1.matchesDrawn += 1;
-          team1.goalsScored += values[2];
-          team2.matchesDrawn += 1;
-          team2.goalsScored += values[3];
+
+      // calculate goals scored and matches won/drawn/lost per match for each team
+      const updatedTeamInfo = validatedMatchResults.map((rowValue) => {
+        var teamOne = teamInfoMap.get(rowValue[0]);
+        var teamTwo = teamInfoMap.get(rowValue[1]);
+        teamOne.goalsScored += rowValue[2];
+        teamTwo.goalsScored += rowValue[3];
+
+        if (rowValue[2] > rowValue[3]) {
+          teamOne.matchesWon += 1;
+          teamTwo.matchesLost += 1;
+        } else if (rowValue[2] < rowValue[3]) {
+          teamOne.matchesLost += 1;
+          teamTwo.matchesWon += 1;
+        } else {
+          teamOne.matchesDrawn += 1;
+          teamTwo.matchesDrawn += 1;
         }
       });
-      var finalArr = [];
-      teamInfoMap.forEach((object) => {
-        finalArr.push(object);
-      });
 
-      var group1 = finalArr.filter(function (object) {
-        return object.groupNumber === "1";
-      });
-
-      var group2 = finalArr.filter(function (object) {
-        return object.groupNumber === "2";
-      });
-
-      group1 = sortGroup(group1);
-      group2 = sortGroup(group2);
-
-      group1.map((object) => {
-        object.currentRanking = group1.indexOf(object) + 1;
-      });
-
-      group2.map((object) => {
-        object.currentRanking = group2.indexOf(object) + 1;
-      });
-
-      finalArr = group1.concat(group2);
+      var finalArr = calculateRanking(teamInfoMap);
 
       try {
         const collection = await prisma.$transaction(
@@ -118,15 +132,17 @@ export default async function handler(req, res) {
         });
       } catch (e) {
         console.error(e);
-        return res
-          .status(500)
-          .json({ message: "Something went wrong. Please try again." });
+        return res.status(500).json({
+          message:
+            "There is an error with the match results. Please check and try again.",
+        });
       }
     } catch (e) {
       console.error(e);
-      return res
-        .status(500)
-        .json({ message: "Something went wrong. Please try again." });
+      return res.status(400).json({
+        message:
+          "There is an error with the match results. Please check and try again.",
+      });
     }
   }
 }
