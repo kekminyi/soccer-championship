@@ -33,7 +33,14 @@ export default function MatchResultsSubmission({
       setMatchResultsSubmitSuccess(true);
     } catch (error) {
       console.error(error);
-      setMatchResultsSubmitSuccess(false);
+      toast({
+        title: "Error!",
+        description:
+          "There are error(s) with the match results. Please check and submit again.",
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
     }
   };
 

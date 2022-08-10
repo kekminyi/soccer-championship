@@ -29,6 +29,14 @@ export default function TeamInfoSubmission({ setTeamInfoSubmitSuccess }) {
       });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Error!",
+        description:
+          "There are error(s) with the team information. Please check and submit again.",
+        status: "error",
+        duration: 6000,
+        isClosable: true,
+      });
     }
   };
 
