@@ -56,7 +56,7 @@ export default function Home() {
         </Flex>
       </Flex>
       {/* Column 2 */}
-      <Flex w="85%" p="2%" flexDir="column" overflow="auto">
+      <Flex w="85%" flexDir="column" overflow="auto">
         <RankingTable></RankingTable>
       </Flex>
     </Flex>
