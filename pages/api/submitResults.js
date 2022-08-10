@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "/lib/prisma";
 
 const calculatePoints = (teamResults) => {
   var points = 0;
@@ -82,8 +82,6 @@ export default async function handler(req, res) {
       teamInfoMap.forEach((object) => {
         finalArr.push(object);
       });
-
-      console.log(finalArr);
 
       var group1 = finalArr.filter(function (object) {
         return object.groupNumber === "1";

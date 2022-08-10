@@ -22,21 +22,17 @@ export default function SubmitResults() {
 
   const handleSubmit = async () => {
     try {
-      await axios
-        .post("/api/submitResults", { matchResults })
-        .then(function (response) {
-          console.log(response.data);
-          console.log("hello");
-          setSuccess(true);
-          setErrorMsg("");
-          toast({
-            title: "Success!",
-            description: "Match results submitted!",
-            status: "success",
-            duration: 6000,
-            isClosable: true,
-          });
+      await axios.post("/api/submitResults", { matchResults }).then(() => {
+        setSuccess(true);
+        setErrorMsg("");
+        toast({
+          title: "Success!",
+          description: "Match results submitted!",
+          status: "success",
+          duration: 6000,
+          isClosable: true,
         });
+      });
     } catch (error) {
       console.error(error);
       setErrorMsg("idk what to put here");
