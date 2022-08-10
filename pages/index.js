@@ -2,9 +2,9 @@ import { Flex, Heading } from "@chakra-ui/react";
 
 import Head from "next/head";
 import React from "react";
-import RankingTable from "./components/RankingTable";
-import TeamInfoSubmission from "./components/TeamInfoSubmission";
-import MatchResultsSubmission from "./components/MatchResultsSubmission";
+import RankingTable from "../components/RankingTable";
+import TeamInfoSubmission from "../components/TeamInfoSubmission";
+import MatchResultsSubmission from "../components/MatchResultsSubmission";
 
 export default function Home() {
   return (
