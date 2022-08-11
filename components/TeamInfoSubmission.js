@@ -65,9 +65,14 @@ export default function TeamInfoSubmission() {
         text="Register Teams"
       ></SidebarIcon>
 
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW="45rem">
           <ModalHeader>Upload Team Information</ModalHeader>
           <ModalBody>
             <FormControl isRequired w={"100%"}>

@@ -64,9 +64,15 @@ export default function MatchResultsSubmission() {
         text="Upload Match Results"
       ></SidebarIcon>
 
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+        closeOnOverlayClick={false}
+        size={"xl"}
+      >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW="45rem">
           <ModalHeader>Upload Match Results</ModalHeader>
           <ModalBody>
             <FormControl isRequired w={"100%"}>
