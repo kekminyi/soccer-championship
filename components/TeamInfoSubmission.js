@@ -20,11 +20,13 @@ import { FiUpload } from "react-icons/fi";
 export default function TeamInfoSubmission() {
   const [teamInfo, setTeamInfo] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       await axios.post("/api/submitTeamInfo", { teamInfo }).then(() => {
         toast({
           title: "Success!",
@@ -45,6 +47,7 @@ export default function TeamInfoSubmission() {
         isClosable: true,
       });
     }
+    setIsLoading(false);
     onClose();
     location.reload();
   };
@@ -72,7 +75,7 @@ export default function TeamInfoSubmission() {
                 <Textarea
                   size="lg"
                   fontSize="l"
-                  placeholder="Team information here!"
+                  placeholder="<Team A name> <Team A registration date in DD/MM> <Team A group number>"
                   value={teamInfo}
                   onChange={handleChange}
                 ></Textarea>
@@ -86,6 +89,8 @@ export default function TeamInfoSubmission() {
               colorScheme="whatsapp"
               m="1%"
               onClick={handleSubmit}
+              isLoading={isLoading}
+              loadingText="Submitting"
             >
               Submit
             </Button>

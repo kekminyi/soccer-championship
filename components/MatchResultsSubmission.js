@@ -20,11 +20,13 @@ import axios from "axios";
 export default function MatchResultsSubmission() {
   const [matchResults, setMatchResults] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       await axios.post("/api/submitMatchResults", { matchResults }).then(() => {
         toast({
           title: "Success!",
@@ -45,6 +47,7 @@ export default function MatchResultsSubmission() {
         isClosable: true,
       });
     }
+    setIsLoading(false);
     onClose();
     location.reload();
   };
@@ -71,7 +74,7 @@ export default function MatchResultsSubmission() {
                 <Textarea
                   size="lg"
                   fontSize="l"
-                  placeholder="Submit match results here!"
+                  placeholder="<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>"
                   value={matchResults}
                   onChange={handleChange}
                 ></Textarea>
@@ -85,6 +88,8 @@ export default function MatchResultsSubmission() {
               colorScheme="whatsapp"
               m="1%"
               onClick={handleSubmit}
+              isLoading={isLoading}
+              loadingText="Submitting"
             >
               Submit
             </Button>

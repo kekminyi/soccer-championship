@@ -12,15 +12,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 
 export default function DeleteButton() {
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
   const handleDelete = async () => {
     try {
+      setIsLoading(true);
+
       await axios.post("/api/deleteAll").then(() => {
         toast({
           title: "Success!",
@@ -29,7 +32,7 @@ export default function DeleteButton() {
           duration: 6000,
           isClosable: true,
         });
-
+        setIsLoading(false);
         location.reload();
       });
     } catch (error) {
@@ -62,7 +65,13 @@ export default function DeleteButton() {
             <Button ref={cancelRef} onClick={onClose}>
               No
             </Button>
-            <Button colorScheme="red" ml={3} onClick={handleDelete}>
+            <Button
+              colorScheme="red"
+              ml={3}
+              onClick={handleDelete}
+              isLoading={isLoading}
+              loadingText="Submitting"
+            >
               Yes
             </Button>
           </AlertDialogFooter>
